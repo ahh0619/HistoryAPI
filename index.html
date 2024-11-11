@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>자바스크립트의 History API</title>
+    <style>
+      #content {
+        margin-top: 20px;
+        font-size: 20px;
+      }
+      button {
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>실습</h1>
+    <button onclick="goToPage('home')">Home</button>
+    <button onclick="goToPage('about')">About</button>
+    <button onclick="goToPage('etc')">etc</button>
+
+    <div id="content">초기화면</div>
+
+    <script>
+      const pages = {
+        home: "홈 페이지",
+        about: "어바웃 페이지",
+        etc: "기타 페이지",
+      };
+
+      function goToPage(page) {
+        history.pushState({ page }, page, `/${page}`);
+        updateContent(page);
+      }
+
+      function updateContent(page) {
+        const contentDiv = document.getElementById("content");
+        contentDiv.textContent = pages[page];
+      }
+
+      window.addEventListener("popstate", (event) => {
+        const state = event.state;
+        if (state) {
+          updateContent(state.page);
+        } else {
+          updateContent("home");
+        }
+      });
+
+      document.addEventListener("load", () => {
+        const path = window.location.pathname.replace("/", "");
+        const page = pages[path] ? path : "home";
+        history.replaceState({ page }, page, `/${page}`);
+        updateContent(page);
+      });
+    </script>
+  </body>
+</html>
